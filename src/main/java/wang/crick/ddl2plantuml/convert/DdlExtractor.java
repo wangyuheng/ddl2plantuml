@@ -1,4 +1,4 @@
-package wang.crick.ddl2plantuml.parser;
+package wang.crick.ddl2plantuml.convert;
 
 import com.alibaba.druid.sql.ast.SQLDataType;
 import com.alibaba.druid.sql.ast.SQLExpr;
@@ -31,9 +31,9 @@ import static java.util.stream.Collectors.toMap;
  * @author wangyuheng
  * @date 2018/6/28 11:13
  */
-public class DdlParser {
+public class DdlExtractor {
 
-    public Table parse(String sql) {
+    public Table extract(String sql) {
         MySqlStatementParser mySqlStatementParser = new MySqlStatementParser(sql);
         MySqlCreateTableStatement ddl = (MySqlCreateTableStatement) mySqlStatementParser.parseCreateTable();
         List<SQLTableElement> sqlTableElementList = ddl.getTableElementList();
