@@ -1,4 +1,4 @@
-package wang.crick.ddl2plantuml.parser;
+package wang.crick.ddl2plantuml.convert;
 
 import wang.crick.ddl2plantuml.model.Column;
 import wang.crick.ddl2plantuml.model.Table;

@@ -1,8 +1,8 @@
 package wang.crick.ddl2plantuml;
 
+import wang.crick.ddl2plantuml.convert.DdlExtractor;
+import wang.crick.ddl2plantuml.convert.ErParser;
 import wang.crick.ddl2plantuml.model.Table;
-import wang.crick.ddl2plantuml.parser.DdlParser;
-import wang.crick.ddl2plantuml.parser.ErParser;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,7 +34,7 @@ public class App {
                 ddl = new StringBuilder();
             }
         }
-        List<Table> tableList = ddlList.stream().map(sql -> new DdlParser().parse(sql)).collect(Collectors.toList());
+        List<Table> tableList = ddlList.stream().map(sql -> new DdlExtractor().extract(sql)).collect(Collectors.toList());
         String er = new ErParser().parse(tableList);
         Files.write(Paths.get("./er.puml"), er.getBytes());
     }
