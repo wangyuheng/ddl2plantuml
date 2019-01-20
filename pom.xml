@@ -6,7 +6,7 @@
 
     <groupId>wang.crick</groupId>
     <artifactId>ddl2plantuml</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>ddl2plantuml</name>
     <url>https://github.com/wangyuheng/ddl2plantuml</url>
