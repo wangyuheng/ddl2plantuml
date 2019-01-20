@@ -10,7 +10,7 @@ jobs:
   include:
     - stage: docker
       name: "Build & Push docker image"
-      if: branch = feature/docker
+      if: branch = master
       script:
         - docker build -t wangyuheng/ddl2plantuml .
         - docker tag wangyuheng/ddl2plantuml wangyuheng/ddl2plantuml:1.0.0
