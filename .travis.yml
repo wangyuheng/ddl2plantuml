@@ -1,0 +1,23 @@
+language: java
+
+services:
+  - docker
+
+jdk:
+  - openjdk8
+
+jobs:
+  include:
+    - stage: docker
+      name: "Build & Push docker image"
+      if: branch = master
+      script:
+        - docker build -t wangyuheng/ddl2plantuml .
+        - docker tag wangyuheng/ddl2plantuml wangyuheng/ddl2plantuml:1.0.0
+        - docker tag wangyuheng/ddl2plantuml wangyuheng/ddl2plantuml:latest
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker push wangyuheng/ddl2plantuml
+
+notifications:
+  email:
+    - wangyuheng@outlook.com
