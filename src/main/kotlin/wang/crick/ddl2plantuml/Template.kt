@@ -1,4 +1,4 @@
-package wang.crick.ddl2plantuml.dictionary
+package wang.crick.ddl2plantuml
 
 /**
  * 模板
