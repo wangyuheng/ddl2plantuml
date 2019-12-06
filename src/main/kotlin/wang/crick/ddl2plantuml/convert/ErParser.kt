@@ -1,6 +1,6 @@
 package wang.crick.ddl2plantuml.convert
 
-import wang.crick.ddl2plantuml.dictionary.Template
+import wang.crick.ddl2plantuml.Template
 import wang.crick.ddl2plantuml.Column
 import wang.crick.ddl2plantuml.Table
 import java.util.*

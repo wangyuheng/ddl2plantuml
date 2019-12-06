@@ -1,6 +1,5 @@
 package wang.crick.ddl2plantuml
 
-import wang.crick.ddl2plantuml.convert.DdlExtractor
 import wang.crick.ddl2plantuml.convert.ErParser
 
 /**
@@ -19,8 +18,7 @@ fun main(args: Array<String>) {
 }
 
 fun process(inPath: String, outPath: String) {
-    val plantumls = FileReader(inPath).read()
-            .map { DdlExtractor.extract(it) }
+    val plantumls = FileReader(inPath).read("mysql")
             .map { ErParser.parse(it) }
 
     FileWriter(outPath).write(plantumls)
