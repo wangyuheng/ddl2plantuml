@@ -16,7 +16,7 @@ import java.util.stream.Collectors
  */
 interface Reader {
 
-    fun read(dbType: String = "mysql"): List<Table>
+    fun read(dbType: String = "mysql"): Iterable<Table>
 
     fun extract(dbType: String, sql: String): Table {
         val statement = SQLParserUtils.createSQLStatementParser(sql, dbType).parseCreateTable()
@@ -36,10 +36,10 @@ interface Reader {
                 .filter { element -> element is SQLColumnDefinition }
                 .map { element -> element as SQLColumnDefinition }
                 .map { scd ->
-                    val name = scd.name.simpleName.replace("`","").trim()
-                    val comment = Objects.toString(scd.comment, "").replace("'","").trim()
+                    val name = scd.name.simpleName.replace("`", "").trim()
+                    val comment = Objects.toString(scd.comment, "").replace("'", "").trim()
                     //默认值
-                    val defaultValue = scd.defaultExpr?.toString()
+                    val defaultValue = scd.defaultExpr?.toString().orEmpty()
                     //数据类型
                     val dataType = scd.dataType
                     //类型大小信息
@@ -52,18 +52,18 @@ interface Reader {
                 }.collect(Collectors.toList())
     }
 
-    private fun shaveName(name:String):String {
-        return name.replace("`","").trim()
+    private fun shaveName(name: String): String {
+        return name.replace("`", "").trim()
     }
 
-    private fun Any.shaveComment():String {
-        return Objects.toString(this, "").replace("'","").trim()
+    private fun Any.shaveComment(): String {
+        return Objects.toString(this, "").replace("'", "").trim()
     }
 }
 
 class FileReader(private val path: String) : Reader {
 
-    override fun read(dbType: String): List<Table> {
+    override fun read(dbType: String): Iterable<Table> {
         return Files.readAllLines(Paths.get(path))
                 .filter { !it.startsWith("#") }
                 .joinToString("")
