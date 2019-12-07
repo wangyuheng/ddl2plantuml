@@ -13,5 +13,5 @@ class Table(var name: String, var comment: String, var columnList: List<Column>)
 /**
  * 字段
  */
-data class Column(var name: String, var comment: String, var type: String, var size: Int?, var defaultValue: String?, var notNull: Boolean) : Serializable
+data class Column(var name: String, var comment: String, var type: String, var size: Int?, var defaultValue: String, var notNull: Boolean) : Serializable
 
