@@ -1,0 +1,19 @@
+@startuml
+storage "Context" {
+    node ddl
+    node db_schema
+    node ER
+    node template
+    node table
+    usecase parser
+    usecase reader
+    usecase writer
+}
+ddl -down-|> db_schema
+db_schema -down-> reader
+reader -> table
+table -> parser
+parser <-up- template
+parser -down-> writer
+writer -> ER
+@enduml
