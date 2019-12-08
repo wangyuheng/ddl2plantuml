@@ -8,7 +8,7 @@ interface Writer {
     fun write(tables: Iterable<Table>)
 
     fun parse(tables: Iterable<Table>): String {
-        val template = Thread.currentThread().contextClassLoader.getResource("markdown.template")!!.readText()
+        val template = Thread.currentThread().contextClassLoader.getResource("dot.template")!!.readText()
 
         val content = tables.joinToString("") { table ->
             val columns = table.columnList.joinToString("\n") { "${it.notNullNameWrapper()} ${it.type} ${it.defaultValue} ${it.comment}" }

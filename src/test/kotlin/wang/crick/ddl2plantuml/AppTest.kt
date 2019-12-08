@@ -12,7 +12,7 @@ import kotlin.random.Random
 class AppTest {
 
     @Test
-    fun testApp(){
+    fun generate_plantuml(){
         val args = arrayOf("./ddl.sql", String.format("./%d.puml", Random.nextInt()))
         main(args)
     }

@@ -14,9 +14,11 @@ import java.util.stream.Collectors
  * @author wangyuheng@outlook.com
  * @date 2019-12-06 22:00
  */
+const val DEFAULT_DB_TYPE = "mysql"
+
 interface Reader {
 
-    fun read(dbType: String = "mysql"): Iterable<Table>
+    fun read(dbType: String? = DEFAULT_DB_TYPE): Iterable<Table>
 
     fun extract(dbType: String, sql: String): Table {
         val statement = SQLParserUtils.createSQLStatementParser(sql, dbType).parseCreateTable()
@@ -63,13 +65,13 @@ interface Reader {
 
 class FileReader(private val path: String) : Reader {
 
-    override fun read(dbType: String): Iterable<Table> {
+    override fun read(dbType: String?): Iterable<Table> {
         return Files.readAllLines(Paths.get(path))
                 .filter { !it.startsWith("#") }
                 .joinToString("")
                 .split(";")
                 .filter { it.isNotBlank() }
-                .map { extract(dbType, it) }
+                .map { extract(dbType?: DEFAULT_DB_TYPE, it) }
                 .toList()
     }
 

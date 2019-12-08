@@ -10,8 +10,9 @@ fun main(args: Array<String>) {
 
     val inPath = args[0]
     val outPath = args[1]
+    val dbType = args.getOrNull(2)
 
-    FileReader(inPath).read()
+    FileReader(inPath).read(dbType)
             .apply { FileWriter(outPath).write(this) }
 
 }
