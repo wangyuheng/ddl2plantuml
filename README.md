@@ -24,34 +24,28 @@ docker run -e DDL='/mnt/data/ddl.sql' -e PLANTUML='/mnt/data/er_by_docker.puml' 
 
 ### 方案
 
+
 ```plantuml
-
-actor DDL
-actor plantUml
-
-cloud {
-    control convert #green
+storage "Context" {
+    node ddl
+    node db_schema
+    node ER
+    node template
+    node table
+    usecase parser
+    usecase reader
+    usecase writer
 }
-
-package {
-    node "read ddl" AS step1
-    node "extract table info" AS step2
-    node "replace by template for plantuml" AS step3
-    node "write plantuml" AS step4
-}
-
-DDL -right-> convert
-convert -right-> plantUml
-
-convert -down-> step1
-step1 -right-> step2 
-step2 -right-> step3
-step3 -right-> step4
-step4 -left-> convert
-
+ddl -down-|> db_schema
+db_schema -down-> reader
+reader -> table
+table -> parser
+parser <-up- template
+parser -down-> writer
+writer -> ER
 ```
 
-![ddl2plantuml-0](http://image.crick.wang/ddl2plantuml-0.jpg)
+![ddl2plantuml-0](https://image.crick.wang/mweb/15758158152825.jpg)
 
 
 ### 使用
