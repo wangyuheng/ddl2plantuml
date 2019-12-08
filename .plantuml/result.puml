@@ -1,0 +1,42 @@
+@startuml
+!define Table(name,desc) class name as "desc" << (T,#FFAAAA) >>
+!define primary_key(x) <color:red><b>x</b></color>
+!define unique(x) <color:green>x</color>
+!define not_null(x) <u>x</u>
+hide methods
+hide stereotypes
+Table(table_1, "table_1\n(This is table 1)"){ 
+not_null(id) bigint  column_1 
+ not_null(prod_name) varchar  column_2 
+ not_null(prod_type) tinyint '0' column_3 0:活期 1:定期 
+ not_null(start_time) time  停止交易开始时间 
+ not_null(end_time) time  停止交易结束时间 
+ not_null(online_type) tinyint '0' 0:上线 1:未上线 
+ not_null(prod_info) varchar '' 产品介绍 
+ not_null(over_limit) tinyint '0' 超额限制 0:限制 1:不限制 
+ not_null(created_time) datetime CURRENT_TIMESTAMP  
+ not_null(updated_time) datetime CURRENT_TIMESTAMP  
+ } 
+  
+ Table(table_2, "table_2\n(This is table 2)"){ 
+not_null(id) bigint   
+ not_null(user_id) bigint  用户id 
+ not_null(user_name) varchar  用户名称 
+ not_null(prod_id) bigint  产品id 
+ interest_date dateNULL计息日期 
+ not_null(created_time) datetime CURRENT_TIMESTAMP 创建时间 
+ not_null(updated_time) datetime CURRENT_TIMESTAMP 更新时间 
+ } 
+
+  
+ Table(table_3, "table_3\n(This is table 3)"){ 
+not_null(id) bigint   
+ not_null(user_id) bigint  用户id 
+ not_null(user_name) varchar  用户名称 
+ not_null(prod_id) bigint  产品id 
+ interest_date dateNULL计息日期 
+ not_null(created_time) datetime CURRENT_TIMESTAMP 创建时间 
+ not_null(updated_time) datetime CURRENT_TIMESTAMP 更新时间 
+ } 
+
+@enduml
