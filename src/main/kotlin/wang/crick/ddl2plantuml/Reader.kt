@@ -4,7 +4,7 @@ import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition
 import com.alibaba.druid.sql.ast.statement.SQLTableElement
 import com.alibaba.druid.sql.parser.SQLParserUtils
 import java.nio.file.Files
-import java.nio.file.Paths
+import java.nio.file.Path
 import java.util.*
 import java.util.stream.Collectors
 
@@ -61,18 +61,32 @@ interface Reader {
     private fun Any.shaveComment(): String {
         return Objects.toString(this, "").replace("'", "").trim()
     }
-}
 
-class FileReader(private val path: String) : Reader {
-
-    override fun read(dbType: String?): Iterable<Table> {
-        return Files.readAllLines(Paths.get(path))
+    fun parse(list: List<String>, dbType: String?): Iterable<Table> {
+        return list
                 .filter { !it.startsWith("#") }
                 .joinToString("")
                 .split(";")
                 .filter { it.isNotBlank() }
-                .map { extract(dbType?: DEFAULT_DB_TYPE, it) }
+                .map { extract(dbType ?: DEFAULT_DB_TYPE, it) }
                 .toList()
+    }
+}
+
+class FileReader(private val path: Path) : Reader {
+
+    override fun read(dbType: String?): Iterable<Table> {
+        return parse(Files.readAllLines(path), dbType)
+
     }
 
 }
+
+class StringReader(private val ddl: String) : Reader {
+
+    override fun read(dbType: String?): Iterable<Table> {
+        return parse(ddl.lines(), dbType)
+    }
+
+}
+

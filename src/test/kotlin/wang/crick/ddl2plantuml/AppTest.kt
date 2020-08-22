@@ -1,7 +1,7 @@
 package wang.crick.ddl2plantuml
 
 import org.junit.jupiter.api.Test
-import kotlin.random.Random
+import java.nio.file.Paths
 
 /**
  * random out er plantuml
@@ -13,8 +13,9 @@ class AppTest {
 
     @Test
     fun generate_plantuml(){
-        val args = arrayOf("./ddl.sql", String.format("./%d.puml", Random.nextInt()))
-        main(args)
+        val convert = Convert()
+        convert.src = Paths.get("./ddl.sql")
+        convert.call()
     }
 
 }
