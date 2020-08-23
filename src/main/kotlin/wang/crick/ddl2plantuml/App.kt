@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
 }
 
 @CommandLine.Command(name = "ddl2plantuml",
-        version = ["软件名称：Ddl2plantuml\n版本：V1.0.0"],
+        version = ["软件名称：Ddl2plantuml\n版本：V1.1.0"],
         description = ["convert sql ddl to plantuml er"],
         mixinStandardHelpOptions = true
 )

@@ -32,7 +32,7 @@ ddl转换为plantuml格式ER图
 
 ```shell
 mvn clean package -Dmaven.test.skip=true 
-java -jar target/ddl2plantuml-1.0.0.jar -o ./er_by_jar.puml ./ddl.sql 
+java -jar target/ddl2plantuml-1.1.0.jar -o ./er_by_jar.puml ./ddl.sql 
 ```
 
 ### docker
@@ -58,5 +58,5 @@ mvn clean package -Dmaven.test.skip=true
 3. 生成native image
 
 ```shell script
-native-image -jar target/ddl2plantuml-1.0.0.jar ddl2plantuml
+native-image -jar target/ddl2plantuml-1.1.0.jar ddl2plantuml
 ```
