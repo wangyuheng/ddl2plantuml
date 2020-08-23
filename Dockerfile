@@ -11,4 +11,4 @@ WORKDIR /opt/target
 
 RUN find -type f -name "*-with-dependencies.jar" | xargs -I{} mv {} app.jar
 
-ENTRYPOINT exec java -jar app.jar $DDL $PLANTUML
+ENTRYPOINT exec java -jar app.jar -o $PLANTUML $DDL

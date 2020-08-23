@@ -1,13 +1,14 @@
 package wang.crick.ddl2plantuml
 
-import org.junit.jupiter.api.Test
+import org.junit.Ignore
+import org.junit.Test
+import java.nio.file.Paths
 
-import org.junit.jupiter.api.Assertions.*
-
+@Ignore
 internal class FileReaderTest {
 
     @Test
     fun read() {
-        println(FileReader("./ddl.sql").read())
+        println(FileReader(Paths.get("./ddl.sql")).read())
     }
 }

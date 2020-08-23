@@ -1,5 +1,10 @@
 package wang.crick.ddl2plantuml
 
+import picocli.CommandLine
+import java.nio.file.Path
+import java.util.concurrent.Callable
+import kotlin.system.exitProcess
+
 /**
  * parse ddl sql to er plantuml
  *
@@ -8,12 +13,44 @@ package wang.crick.ddl2plantuml
  */
 fun main(args: Array<String>) {
 
-    val inPath = args[0]
-    val outPath = args[1]
-    val dbType = args.getOrNull(2)
-
-    FileReader(inPath).read(dbType)
-            .apply { FileWriter(outPath).write(this) }
-
+    val cmd = CommandLine(Convert())
+    when {
+        args.isEmpty() -> {
+            cmd.usage(System.out)
+        }
+        else -> {
+            val exitCode = cmd.execute(*args)
+            exitProcess(exitCode)
+        }
+    }
 }
 
+@CommandLine.Command(name = "ddl2plantuml",
+        version = ["软件名称：Ddl2plantuml\n版本：V1.1.0"],
+        description = ["convert sql ddl to plantuml er"],
+        mixinStandardHelpOptions = true
+)
+class Convert : Callable<Int> {
+
+    @CommandLine.Parameters(index = "0", description = ["The sql ddl file that should be convert to plantuml er."])
+    lateinit var src: Path
+
+    @CommandLine.Option(names = ["-o", "--output"], description = ["The file where the plantuml file to be saved. default is console "])
+    private var target: Path? = null
+
+    override fun call(): Int {
+        require(src.toFile().exists()) { "ddl file must be existed!" }
+        when (target) {
+            null -> {
+                FileReader(src).read()
+                        .apply { ConsoleWriter(this).write() }
+            }
+            else -> {
+                FileReader(src).read()
+                        .apply { FileWriter(target!!, this).write() }
+            }
+        }
+        return 0
+    }
+
+}
