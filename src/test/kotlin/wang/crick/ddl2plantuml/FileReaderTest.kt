@@ -1,8 +1,10 @@
 package wang.crick.ddl2plantuml
 
-import org.junit.jupiter.api.Test
+import org.junit.Ignore
+import org.junit.Test
 import java.nio.file.Paths
 
+@Ignore
 internal class FileReaderTest {
 
     @Test

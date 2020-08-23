@@ -1,6 +1,7 @@
 package wang.crick.ddl2plantuml
 
-import org.junit.jupiter.api.Test
+import org.junit.Ignore
+import org.junit.Test
 import java.nio.file.Paths
 
 /**
@@ -9,6 +10,7 @@ import java.nio.file.Paths
  * @author wangyuheng
  * @date 2019-01-20 14:20
  */
+@Ignore
 class AppTest {
 
     @Test
@@ -19,4 +21,5 @@ class AppTest {
     }
 
 }
+
 

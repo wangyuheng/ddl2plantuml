@@ -12,7 +12,7 @@ interface Writer {
 
         val content = tables.joinToString("") { table ->
             val columns = table.columnList.joinToString("\n") { "${it.notNullNameWrapper()} ${it.type} ${it.defaultValue} ${it.comment}" }
-            "Table(${table.name}, \"${table.name}\\n(${table.comment})\"){ \n $columns + \n } \n"
+            "Table(${table.name}, \"${table.name}\\n(${table.comment})\"){ \n $columns \n } \n"
         }
 
         return template.replace("__content__", content)

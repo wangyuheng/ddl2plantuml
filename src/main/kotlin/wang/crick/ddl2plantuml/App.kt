@@ -13,8 +13,6 @@ import kotlin.system.exitProcess
  */
 fun main(args: Array<String>) {
 
-    CommandLine(Convert()).execute(*args)
-
     val cmd = CommandLine(Convert())
     when {
         args.isEmpty() -> {
@@ -37,7 +35,7 @@ class Convert : Callable<Int> {
     @CommandLine.Parameters(index = "0", description = ["The sql ddl file that should be convert to plantuml er."])
     lateinit var src: Path
 
-    @CommandLine.Option(names = ["-o", "--output"], description = ["The dir where the plantuml file to be saved. "])
+    @CommandLine.Option(names = ["-o", "--output"], description = ["The file where the plantuml file to be saved. default is console "])
     private var target: Path? = null
 
     override fun call(): Int {

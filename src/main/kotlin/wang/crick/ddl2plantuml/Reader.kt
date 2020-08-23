@@ -1,12 +1,13 @@
 package wang.crick.ddl2plantuml
 
-import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition
-import com.alibaba.druid.sql.ast.statement.SQLTableElement
-import com.alibaba.druid.sql.parser.SQLParserUtils
+import net.sf.jsqlparser.parser.CCJSqlParserUtil
+import net.sf.jsqlparser.statement.create.table.ColumnDefinition
+import net.sf.jsqlparser.statement.create.table.CreateTable
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 import java.util.stream.Collectors
+
 
 /**
  * read a ddl file to table
@@ -21,36 +22,45 @@ interface Reader {
     fun read(dbType: String? = DEFAULT_DB_TYPE): Iterable<Table>
 
     fun extract(dbType: String, sql: String): Table {
-        val statement = SQLParserUtils.createSQLStatementParser(sql, dbType).parseCreateTable()
-
-        val name = shaveName(statement.name.simpleName)
-        val columnList = extractColumn(statement.tableElementList)
+        val statement: CreateTable = CCJSqlParserUtil.parse(sql) as CreateTable
+        val name = shaveName(statement.table.name)
+        val columnList = extractColumn(statement.columnDefinitions)
 
         return Table(
                 name,
-                statement.comment.shaveComment(),
+                statement.tableOptionsStrings.last().toString().shaveComment(),
                 columnList
         )
     }
 
-    private fun extractColumn(tableElementList: List<SQLTableElement>): List<Column> {
-        return tableElementList.stream()
-                .filter { element -> element is SQLColumnDefinition }
-                .map { element -> element as SQLColumnDefinition }
-                .map { scd ->
-                    val name = scd.name.simpleName.replace("`", "").trim()
-                    val comment = Objects.toString(scd.comment, "").replace("'", "").trim()
-                    //默认值
-                    val defaultValue = scd.defaultExpr?.toString().orEmpty()
+    private fun extractColumn(columnDefinitions: List<ColumnDefinition>): List<Column> {
+        return columnDefinitions.stream()
+                .map { col ->
+                    val name = col.columnName.shaveComment()
+                    var comment = ""
+                    var defaultValue = ""
+
+                    val commentIndex = col.columnSpecs.map { it.toUpperCase() }.indexOf("COMMENT")
+                    if (commentIndex > -1) {
+                        comment = col.columnSpecs[commentIndex + 1]
+                    }
+
+                    val defaultValueIndex = col.columnSpecs.map { it.toUpperCase() }.indexOf("DEFAULT")
+                    if (defaultValueIndex > -1) {
+                        defaultValue = col.columnSpecs[defaultValueIndex + 1]
+                    }
+
                     //数据类型
-                    val dataType = scd.dataType
+                    val dataType = col.colDataType
                     //类型大小信息
-                    val dataTypeArguments = dataType.arguments
+                    val dataTypeArguments = dataType.argumentsStringList
                     var size = 0
                     if (null != dataTypeArguments && dataTypeArguments.size > 0) {
                         size = Integer.parseInt(dataTypeArguments[0].toString())
                     }
-                    Column(name, comment, dataType.name, size, defaultValue, scd.containsNotNullConstaint())
+
+                    val notNull = col.columnSpecs.joinToString(",").toUpperCase().contains("NOT,NULL")
+                    Column(name, comment, dataType.dataType, size, defaultValue, notNull)
                 }.collect(Collectors.toList())
     }
 
