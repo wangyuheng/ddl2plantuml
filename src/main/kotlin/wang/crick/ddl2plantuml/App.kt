@@ -26,13 +26,13 @@ fun main(args: Array<String>) {
 }
 
 @CommandLine.Command(name = "ddl2plantuml",
-        version = ["软件名称：Ddl2plantuml\n版本：V1.1.0"],
-        description = ["convert sql ddl to plantuml er"],
+        version = ["软件名称：Ddl2plantuml", "版本：V1.1.0"],
+        description = ["convert sql @|bold,fg(red) ddl|@ to @|bold,fg(red) plantuml|@ er"],
         mixinStandardHelpOptions = true
 )
 class Convert : Callable<Int> {
 
-    @CommandLine.Parameters(index = "0", description = ["The sql ddl file that should be convert to plantuml er."])
+    @CommandLine.Parameters(index = "0", paramLabel = "FILE", description = ["The sql ddl file that should be convert to plantuml er."])
     lateinit var src: Path
 
     @CommandLine.Option(names = ["-o", "--output"], description = ["The file where the plantuml file to be saved. default is console "])
