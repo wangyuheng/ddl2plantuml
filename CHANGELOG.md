@@ -1,3 +1,12 @@
+## 1.2.0
+
+- support navicat export ddl
+- ddl split not dependent ";"
+
+## 1.1.1
+
+- fix docker image `Unable to access jarfile app.jar`
+
 ## 1.1.0
 
 - 引入`picocli`封装命令行应用

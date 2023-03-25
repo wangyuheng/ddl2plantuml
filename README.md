@@ -15,6 +15,14 @@ ddl转换为plantuml格式ER图
 
 ![result diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/wangyuheng/ddl2plantuml/master/.plantuml/result.puml)
 
+## 打包
+
+### Docker
+
+```shell
+docker build -t wangyuheng/ddl2plantuml:x.y.z .
+```
+
 ## Manual
 
 指定sql文件地址，以及输出的plantuml文件地址

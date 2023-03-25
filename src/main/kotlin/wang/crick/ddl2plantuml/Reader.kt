@@ -16,6 +16,7 @@ import java.util.stream.Collectors
  * @date 2019-12-06 22:00
  */
 const val DEFAULT_DB_TYPE = "mysql"
+const val SEPARATOR = "#wyh_dp#"
 
 interface Reader {
 
@@ -27,41 +28,41 @@ interface Reader {
         val columnList = extractColumn(statement.columnDefinitions)
 
         return Table(
-                name,
-                statement.tableOptionsStrings.last().toString().shaveComment(),
-                columnList
+            name,
+            statement.tableOptionsStrings.last().toString().shaveComment(),
+            columnList
         )
     }
 
     private fun extractColumn(columnDefinitions: List<ColumnDefinition>): List<Column> {
         return columnDefinitions.stream()
-                .map { col ->
-                    val name = col.columnName.shaveComment()
-                    var comment = ""
-                    var defaultValue = ""
+            .map { col ->
+                val name = col.columnName.shaveComment()
+                var comment = ""
+                var defaultValue = ""
 
-                    val commentIndex = col.columnSpecs.map { it.toUpperCase() }.indexOf("COMMENT")
-                    if (commentIndex > -1) {
-                        comment = col.columnSpecs[commentIndex + 1]
-                    }
+                val commentIndex = col.columnSpecs.map { it.toUpperCase() }.indexOf("COMMENT")
+                if (commentIndex > -1) {
+                    comment = col.columnSpecs[commentIndex + 1]
+                }
 
-                    val defaultValueIndex = col.columnSpecs.map { it.toUpperCase() }.indexOf("DEFAULT")
-                    if (defaultValueIndex > -1) {
-                        defaultValue = col.columnSpecs[defaultValueIndex + 1]
-                    }
+                val defaultValueIndex = col.columnSpecs.map { it.toUpperCase() }.indexOf("DEFAULT")
+                if (defaultValueIndex > -1) {
+                    defaultValue = col.columnSpecs[defaultValueIndex + 1]
+                }
 
-                    //数据类型
-                    val dataType = col.colDataType
-                    //类型大小信息
-                    val dataTypeArguments = dataType.argumentsStringList
-                    var size = 0
-                    if (null != dataTypeArguments && dataTypeArguments.size > 0) {
-                        size = Integer.parseInt(dataTypeArguments[0].toString())
-                    }
+                //数据类型
+                val dataType = col.colDataType
+                //类型大小信息
+                val dataTypeArguments = dataType.argumentsStringList
+                var size = 0
+                if (null != dataTypeArguments && dataTypeArguments.size > 0) {
+                    size = Integer.parseInt(dataTypeArguments[0].toString())
+                }
 
-                    val notNull = col.columnSpecs.joinToString(",").toUpperCase().contains("NOT,NULL")
-                    Column(name, comment, dataType.dataType, size, defaultValue, notNull)
-                }.collect(Collectors.toList())
+                val notNull = col.columnSpecs.joinToString(",").toUpperCase().contains("NOT,NULL")
+                Column(name, comment, dataType.dataType, size, defaultValue, notNull)
+            }.collect(Collectors.toList())
     }
 
     private fun shaveName(name: String): String {
@@ -74,12 +75,21 @@ interface Reader {
 
     fun parse(list: List<String>, dbType: String?): Iterable<Table> {
         return list
-                .filter { !it.startsWith("#") }
-                .joinToString("")
-                .split(";")
-                .filter { it.isNotBlank() }
-                .map { extract(dbType ?: DEFAULT_DB_TYPE, it) }
-                .toList()
+            .map { it.trimStart() }
+            .filter { !it.startsWith("#") }
+            .filter { !it.startsWith("--") }
+            .joinToString("")
+            .replace(Regex("(?s)/\\\\*.*?\\\\*/;"), "")
+            .replace(Regex("(?s)/\\\\*.*?\\\\*/"), "")
+            .replace("CREATE TABLE ", "$SEPARATOR CREATE TABLE", ignoreCase = true)
+            .split(SEPARATOR)
+            .asSequence()
+            .map { it.replace(SEPARATOR, "") }
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .filter { it != ";" }
+            .map { extract(dbType ?: DEFAULT_DB_TYPE, it) }
+            .toList()
     }
 }
 
