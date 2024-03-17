@@ -2,6 +2,7 @@ package wang.crick.ddl2plantuml
 
 import org.junit.Ignore
 import org.junit.Test
+import wang.yuheng.FileReader
 import java.nio.file.Paths
 
 @Ignore

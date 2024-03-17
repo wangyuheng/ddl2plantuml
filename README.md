@@ -3,7 +3,7 @@
 
 # ddl2plantuml
 
-ddl转换为plantuml格式ER图
+parse ddl sql to plantuml ER diagram
 
 ## Design
 
@@ -15,57 +15,44 @@ ddl转换为plantuml格式ER图
 
 ![result diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/wangyuheng/ddl2plantuml/master/.plantuml/result.puml)
 
-## 打包
+## Run
 
-### Docker
-
-```shell
-docker build -t wangyuheng/ddl2plantuml:x.y.z .
-```
-
-## Manual
-
-指定sql文件地址，以及输出的plantuml文件地址
-
-### 原生运行文件
-
-根据系统选择不同的native程序
-
-```shell script
-./ddl2plantuml_mac ./ddl.sql 
-```
-
-### jar
+### Run With Command
 
 ```shell
-mvn clean package -Dmaven.test.skip=true 
-java -jar target/ddl2plantuml-1.1.0.jar -o ./er_by_jar.puml ./ddl.sql 
+docker run -v $(pwd)/example/ddl.sql:'/app/ddl.sql' wangyuheng/ddl2plantuml:latest /app/ddl.sql
 ```
 
-### docker
+### Run With API
 
-[DockerImage](https://hub.docker.com/r/wangyuheng/ddl2plantuml)
-
-打包docker镜像方便使用，需要指定volume用于读取sql文件，以及输出plantuml
-
-```
-docker run -e DDL='/mnt/data/ddl.sql' -e PLANTUML='/mnt/data/er_by_docker.puml' -v $(pwd):'/mnt/data' wangyuheng/ddl2plantuml:latest
+```shell
+docker run -e D2P_MODE=web -p 18080:8080  wangyuheng/ddl2plantuml:latest
 ```
 
-## Develop
+Then request api with HTTP
 
-### 通过 Graalvm 打包原生应用
-
-1. 安装Graalvm https://www.graalvm.org/docs/getting-started-with-graalvm/
-
-2. 打包jar
-
-```shell script
-mvn clean package -Dmaven.test.skip=true 
+```shell
+curl --location 'localhost:8080/d2p' \
+--header 'Content-Type: application/json' \
+--data '{
+    "ddl": "CREATE TABLE `table_1` (  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '\''column_1'\'',  `prod_name` varchar(20) NOT NULL COMMENT '\''column_2'\'',  `prod_type` tinyint(1) unsigned NOT NULL DEFAULT '\''0'\'' COMMENT '\''column_3 0:活期 1:定期'\'',  `start_time` time NOT NULL COMMENT '\''停止交易开始时间'\'',  `end_time` time NOT NULL COMMENT '\''停止交易结束时间'\'',  `online_type` tinyint(1) unsigned NOT NULL DEFAULT '\''0'\'' COMMENT '\''0:上线 1:未上线'\'',  `prod_info` varchar(2000) NOT NULL DEFAULT '\'''\'' COMMENT '\''产品介绍'\'',  `over_limit` tinyint(1) unsigned NOT NULL DEFAULT '\''0'\'' COMMENT '\''超额限制 0:限制 1:不限制'\'',  `created_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,  `updated_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`id`)) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='\''This is table 1;'\'';"
+}'
 ```
 
-3. 生成native image
+## Deployment
 
-```shell script
-native-image -jar target/ddl2plantuml-1.1.0.jar ddl2plantuml
+### Build a fat JAR
+
+```shell
+./gradlew :buildFatJar
+```
+
+### Build a Docker image
+
+```shell
+./gradlew :buildImage
+```
+
+```shell
+./gradlew :runDocker
 ```

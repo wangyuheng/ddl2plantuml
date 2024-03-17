@@ -1,3 +1,8 @@
+## 1.3.0
+
+- support HTTP Api with ktor
+- modify maven to gradle kotlin
+
 ## 1.2.0
 
 - support navicat export ddl

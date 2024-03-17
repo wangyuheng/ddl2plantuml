@@ -1,4 +1,4 @@
-package wang.crick.ddl2plantuml
+package wang.yuheng
 
 import java.nio.file.Files
 import java.nio.file.Path

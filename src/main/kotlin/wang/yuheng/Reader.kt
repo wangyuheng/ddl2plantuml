@@ -1,4 +1,4 @@
-package wang.crick.ddl2plantuml
+package wang.yuheng
 
 import net.sf.jsqlparser.parser.CCJSqlParserUtil
 import net.sf.jsqlparser.statement.create.table.ColumnDefinition
