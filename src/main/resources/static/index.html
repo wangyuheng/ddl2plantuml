@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>DDL2Plantuml</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        #container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        #inputText {
+            width: 45%;
+            height: 400px;
+            overflow: auto;
+        }
+
+        #outputText {
+            width: 45%;
+            height: 400px;
+            overflow: auto;
+            background-color: #e8e8e8;
+        }
+
+        #convertButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        #convertButton:hover {
+            background-color: #0056b3;
+        }
+
+        #imageContainer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #outputImage {
+            max-width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="container">
+    <label for="inputText"></label>
+    <textarea id="inputText" placeholder="在这里输入SQL...">
+CREATE TABLE `table_1` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'column_1',
+  `prod_name` varchar(20) NOT NULL COMMENT 'column_2',
+  `prod_type` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'column_3 0:活期 1:定期',
+  `start_time` time NOT NULL COMMENT '停止交易开始时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='This is table 1;';
+
+CREATE TABLE `table_2` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL COMMENT '用户id',
+  `user_name` varchar(50) NOT NULL COMMENT '用户名称',
+  `prod_id` bigint(20) unsigned NOT NULL COMMENT '产品id',
+  `interest_date` date DEFAULT NULL COMMENT '计息日期',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uk_user_id_prod_id` (`user_id`,`prod_id`) USING BTREE
+) COMMENT='This is table 2';
+    </textarea>
+    <button id="convertButton" onclick="convertText()">Convert</button>
+    <label for="outputText"></label><textarea id="outputText" placeholder="转换后的文本将在这里显示..." readonly></textarea>
+</div>
+<hr />
+<div id="imageContainer">
+    <img id="outputImage" src="" alt="PlantUML图像将在这里显示" style="display:none;" />
+</div>
+<script src="synchro2.min.js"></script>
+
+<script>
+    function convertText() {
+        // 获取输入文本
+        var inputText = document.getElementById('inputText').value;
+
+        // 构建要发送的数据
+        var dataToSend = {
+            ddl: inputText
+        };
+
+        // 发起POST请求
+        fetch('/d2p', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend),
+        })
+            .then(response => response.json())
+            .then(res => {
+                // 显示转换后的文本
+                document.getElementById('outputText').value = res.data;
+                var plantUmlServerUrl = 'http://www.plantuml.com/plantuml/png/' + compress(res.data);
+                // 设置图片的src属性为PlantUML服务器的URL
+                var outputImage = document.getElementById('outputImage');
+                outputImage.src = plantUmlServerUrl;
+                outputImage.style.display = 'inline'; // 显示图片
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+
+    function compress(s) {
+        s = unescape(encodeURIComponent(s));
+        var arr = [];
+        for (var i = 0; i < s.length; i++) {
+            arr.push(s.charCodeAt(i));
+        }
+        var compressor = new Zopfli.RawDeflate(arr);
+        var compressed = compressor.compress();
+        return encode64_(compressed);
+    }
+
+</script>
+</body>
+
+</html>

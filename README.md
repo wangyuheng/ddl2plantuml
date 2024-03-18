@@ -5,6 +5,8 @@
 
 parse ddl sql to plantuml ER diagram
 
+Demo -> https://ddl2plantuml.yuheng.wang
+
 | before                                                                                                                                         | after                                                                                                                                                |
 |------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
 | ![sql diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/wangyuheng/ddl2plantuml/master/.plantuml/sql.puml) | ![result diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/wangyuheng/ddl2plantuml/master/.plantuml/result.puml) |
@@ -42,7 +44,7 @@ docker start -a ddl2plantuml
 docker run -e D2P_MODE=web -p 8080:8080  wangyuheng/ddl2plantuml:latest
 ```
 
-Then request api with HTTP
+Access web with http://localhost:8080 Or request api with HTTP
 
 ```shell
 curl --location 'localhost:8080/d2p' \

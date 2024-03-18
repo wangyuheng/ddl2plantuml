@@ -29,6 +29,7 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("io.ktor:ktor-server-freemarker-jvm")
     implementation("com.github.jsqlparser:jsqlparser:4.9")
     implementation("info.picocli:picocli:4.7.5")
     implementation("ch.qos.logback:logback-classic:$logback_version")
@@ -44,7 +45,7 @@ ktor {
     docker {
         jreVersion.set(JavaVersion.VERSION_21)
         localImageName.set("wangyuheng/ddl2plantuml")
-        imageTag.set("1.3.0")
+        imageTag.set("1.4.0")
         portMappings.set(listOf(
 //            io.ktor.plugin.features.DockerPortMapping(
 //                8080,

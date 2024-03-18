@@ -1,8 +1,11 @@
 package wang.yuheng
 
+import freemarker.cache.ClassTemplateLoader
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
+import io.ktor.server.freemarker.*
+import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.request.*
@@ -15,6 +18,7 @@ fun runWeb(args: Array<String>) {
     val serverConfig = createServerConfig()
     embeddedServer(Netty, host = serverConfig.host, port = serverConfig.port) {
         configureSerialization()
+        configureTemplating()
         configureRouting()
     }.start(wait = true)
 
@@ -35,6 +39,12 @@ fun runWeb(args: Array<String>) {
     }.start(wait = true)
 }
 
+private fun Application.configureTemplating() {
+    install(FreeMarker) {
+        templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
+    }
+}
+
 private fun Application.configureSerialization() {
     install(ContentNegotiation) {
         json()
@@ -43,6 +53,7 @@ private fun Application.configureSerialization() {
 
 private fun Application.configureRouting() {
     routing {
+        staticResources("/", "static")
         post("/d2p") {
             val request = call.receive<Request>()
             val response = processRequest(request)
