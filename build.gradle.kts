@@ -45,7 +45,7 @@ ktor {
     docker {
         jreVersion.set(JavaVersion.VERSION_21)
         localImageName.set("wangyuheng/ddl2plantuml")
-        imageTag.set("1.4.0")
+        imageTag.set("1.4.1")
         portMappings.set(listOf(
 //            io.ktor.plugin.features.DockerPortMapping(
 //                8080,
