@@ -98,8 +98,6 @@ CREATE TABLE `table_2` (
 <div id="imageContainer">
     <img id="outputImage" src="" alt="PlantUML图像将在这里显示" style="display:none;" />
 </div>
-<script src="synchro2.min.js"></script>
-
 <script>
     function convertText() {
         // 获取输入文本
@@ -120,29 +118,20 @@ CREATE TABLE `table_2` (
         })
             .then(response => response.json())
             .then(res => {
-                // 显示转换后的文本
-                document.getElementById('outputText').value = res.data;
-                var plantUmlServerUrl = 'http://www.plantuml.com/plantuml/png/' + compress(res.data);
-                // 设置图片的src属性为PlantUML服务器的URL
-                var outputImage = document.getElementById('outputImage');
-                outputImage.src = plantUmlServerUrl;
-                outputImage.style.display = 'inline'; // 显示图片
+                if (!!res.err) {
+                    document.getElementById('outputText').value = res.err;
+                } else {
+                    // 显示转换后的文本
+                    document.getElementById('outputText').value = res.text;
+                    const outputImage = document.getElementById('outputImage');
+                    outputImage.src = res.previewUrl;
+                    outputImage.style.display = 'inline'; // 显示图片
+                }
             })
             .catch((error) => {
                 console.error('Error:', error);
+                document.getElementById('outputText').value = error;
             });
-    }
-
-
-    function compress(s) {
-        s = unescape(encodeURIComponent(s));
-        var arr = [];
-        for (var i = 0; i < s.length; i++) {
-            arr.push(s.charCodeAt(i));
-        }
-        var compressor = new Zopfli.RawDeflate(arr);
-        var compressed = compressor.compress();
-        return encode64_(compressed);
     }
 
 </script>

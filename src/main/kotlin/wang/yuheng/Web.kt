@@ -8,6 +8,7 @@ import io.ktor.server.freemarker.*
 import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -17,6 +18,7 @@ import kotlinx.serialization.Serializable
 fun runWeb(args: Array<String>) {
     val serverConfig = createServerConfig()
     embeddedServer(Netty, host = serverConfig.host, port = serverConfig.port) {
+        configureErrorHandle()
         configureSerialization()
         configureTemplating()
         configureRouting()
@@ -37,6 +39,14 @@ fun runWeb(args: Array<String>) {
             }
         }
     }.start(wait = true)
+}
+
+private fun Application.configureErrorHandle() {
+    install(StatusPages) {
+        exception<Throwable> { call, cause ->
+            call.respond(message = BaseResponse(err = cause.message))
+        }
+    }
 }
 
 private fun Application.configureTemplating() {
@@ -79,7 +89,10 @@ private data class ServerConfig(val host: String, val port: Int)
 data class Request(val ddl: String)
 
 @Serializable
-data class Response(val data: String)
+open class BaseResponse(open val err: String? = null)
+
+@Serializable
+data class Response(val text: String, val previewUrl: String, val previewMarkdown: String) : BaseResponse()
 
 
 class ApiWriter(private val tables: Iterable<Table>) : Writer {
@@ -88,8 +101,19 @@ class ApiWriter(private val tables: Iterable<Table>) : Writer {
     }
 
     fun message(): Response {
-        val response = Response(data = parse(tables))
+        val host = System.getenv("PLANTUML_HOST") ?: "https://www.plantuml.com"
+
+        val text = parse(tables)
+        val previewUrl = "$host/plantuml/png/~h" + text.toHex()
+        val response = Response(text = text, previewUrl = previewUrl, previewMarkdown = "![preview]($previewUrl)")
         return response
     }
 }
+
+fun String.toHex(): String {
+    return this.toByteArray().joinToString(separator = "") {
+        "%02x".format(it)
+    }
+}
+
 

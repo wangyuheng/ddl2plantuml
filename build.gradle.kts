@@ -30,6 +30,7 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("io.ktor:ktor-server-freemarker-jvm")
+    implementation("io.ktor:ktor-server-status-pages")
     implementation("com.github.jsqlparser:jsqlparser:4.9")
     implementation("info.picocli:picocli:4.7.5")
     implementation("ch.qos.logback:logback-classic:$logback_version")

@@ -1,6 +1,8 @@
 ## 1.4.2
 
 - fix parse err when table without comment
+- catch err and show
+- plantuml png proxy compress with hex
 
 ## 1.4.0
 
