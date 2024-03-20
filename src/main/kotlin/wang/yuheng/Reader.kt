@@ -29,7 +29,7 @@ interface Reader {
 
         return Table(
             name,
-            statement.tableOptionsStrings.last().toString().shaveComment(),
+            statement.tableOptionsStrings?.last().toString().shaveComment(),
             columnList
         )
     }
@@ -81,7 +81,7 @@ interface Reader {
             .joinToString("")
             .replace(Regex("(?s)/\\\\*.*?\\\\*/;"), "")
             .replace(Regex("(?s)/\\\\*.*?\\\\*/"), "")
-            .replace("CREATE TABLE ", "$SEPARATOR CREATE TABLE", ignoreCase = true)
+            .replace("CREATE TABLE ", "$SEPARATOR CREATE TABLE ", ignoreCase = true)
             .split(SEPARATOR)
             .asSequence()
             .map { it.replace(SEPARATOR, "") }

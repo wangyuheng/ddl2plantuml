@@ -1,7 +1,8 @@
-package wang.crick.ddl2plantuml
+package wang.yuheng.ddl2plantuml
 
 import org.junit.Ignore
 import org.junit.Test
+import wang.yuheng.Convert
 import java.nio.file.Paths
 
 /**

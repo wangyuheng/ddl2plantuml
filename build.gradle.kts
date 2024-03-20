@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "wang.yuheng"
-version = "1.3.0"
+version = "1.4.2"
 
 application {
     mainClass.set("wang.yuheng.AppKt")
@@ -45,7 +45,7 @@ ktor {
     docker {
         jreVersion.set(JavaVersion.VERSION_21)
         localImageName.set("wangyuheng/ddl2plantuml")
-        imageTag.set("1.4.1")
+        imageTag.set("$version")
         portMappings.set(listOf(
 //            io.ktor.plugin.features.DockerPortMapping(
 //                8080,

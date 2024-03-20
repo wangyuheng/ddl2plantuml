@@ -1,3 +1,7 @@
+## 1.4.2
+
+- fix parse err when table without comment
+
 ## 1.4.0
 
 - interactive website
