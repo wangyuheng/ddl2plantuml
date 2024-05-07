@@ -41,12 +41,12 @@ interface Reader {
                 var comment = ""
                 var defaultValue = ""
 
-                val commentIndex = col.columnSpecs.map { it.toUpperCase() }.indexOf("COMMENT")
+                val commentIndex = col.columnSpecs?.map { it.toUpperCase() }?.indexOf("COMMENT") ?: -1
                 if (commentIndex > -1) {
                     comment = col.columnSpecs[commentIndex + 1]
                 }
 
-                val defaultValueIndex = col.columnSpecs.map { it.toUpperCase() }.indexOf("DEFAULT")
+                val defaultValueIndex = col.columnSpecs?.map { it.toUpperCase() }?.indexOf("DEFAULT") ?: -1
                 if (defaultValueIndex > -1) {
                     defaultValue = col.columnSpecs[defaultValueIndex + 1]
                 }
@@ -60,7 +60,7 @@ interface Reader {
                     size = Integer.parseInt(dataTypeArguments[0].toString())
                 }
 
-                val notNull = col.columnSpecs.joinToString(",").toUpperCase().contains("NOT,NULL")
+                val notNull = col.columnSpecs?.joinToString(",")?.toUpperCase()?.contains("NOT,NULL") ?: false
                 Column(name, comment, dataType.dataType, size, defaultValue, notNull)
             }.collect(Collectors.toList())
     }
